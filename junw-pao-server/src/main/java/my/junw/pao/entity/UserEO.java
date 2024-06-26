@@ -103,7 +103,7 @@ public class UserEO implements Serializable {
     /**
      * 标签 json 列表
      */
-    @TableField("email")
+    @TableField("tags")
     private String tags;
 
     public static final String ID = "id";
