@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="my.junw.pao.dao.TagEODao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="my.junw.pao.entity.TagEO">
+        <id column="id" property="id" />
+        <result column="tagName" property="tagName" />
+        <result column="userId" property="userId" />
+        <result column="parentId" property="parentId" />
+        <result column="isParent" property="isParent" />
+        <result column="createTime" property="createTime" />
+        <result column="updateTime" property="updateTime" />
+        <result column="isDelete" property="isDelete" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, tagName, userId, parentId, isParent, createTime, updateTime, isDelete
+    </sql>
+
+</mapper>
