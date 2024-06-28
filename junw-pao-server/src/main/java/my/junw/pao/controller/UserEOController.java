@@ -15,6 +15,7 @@ import my.junw.pao.util.UserToUser;
 import my.junw.pao.vo.UserLoginRequst;
 import my.junw.pao.vo.UserRegisterRequst;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -167,5 +168,37 @@ public class UserEOController {
         }
         return false;
     }
+
+    /**
+     * 根据标签名集合查找用户
+     * @param tagNameList
+     * @return
+     */
+    @Operation(summary = "根据标签名集合查找用户", description = "根据标签名集合查找用户；参数不可为空")
+    @GetMapping("/search/tags")
+    public BaseResponse<List<UserEO>> searchUsersByTags(@RequestParam(required = false) List<String> tagNameList) {
+        // 解除注解必填校验；自定义返回错误信息
+        if (CollectionUtils.isEmpty(tagNameList)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        List<UserEO> userList = service.searchUsersByTags(tagNameList);
+        return ResultUtils.success(userList);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
