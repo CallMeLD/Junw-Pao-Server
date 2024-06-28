@@ -1,6 +1,8 @@
 package my.junw.pao.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import my.junw.pao.exception.BusinessException;
@@ -31,6 +33,7 @@ import static my.junw.pao.contant.UserConstant.USER_LOGIN_STATE;
  */
 @RestController   // 返回值默认为 json 类型
 @RequestMapping("/user")
+@Tag(name = "|UserEO| 用户-前端控制器 ")
 public class UserEOController {
 
     @Resource
@@ -41,6 +44,7 @@ public class UserEOController {
      * @param urr
      * @return
      */
+    @Operation(summary = "注册", description = "用户初始注册")
     @PostMapping("/register")
     public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequst urr){
         // 入参校验，无关业务逻辑
@@ -62,6 +66,7 @@ public class UserEOController {
      * @param hsr
      * @return
      */
+    @Operation(summary = "登录", description = "用户登录系统")
     @PostMapping("/login")
     public BaseResponse<UserEO> userLogin(@RequestBody UserLoginRequst ulr, HttpServletRequest hsr){
         // 入参校验，无关业务逻辑
@@ -81,6 +86,7 @@ public class UserEOController {
      * @param hsr
      * @return
      */
+    @Operation(summary = "注销", description = "用户退出登录")
     @PostMapping("/logout")
     public BaseResponse<Integer> userLogout(HttpServletRequest hsr){
         if(hsr == null){
@@ -95,6 +101,7 @@ public class UserEOController {
      * @param hsr
      * @return
      */
+    @Operation(summary = "获取当前登录用户", description = "获取当前登录用户的详细信息，前台用于显示信息、判定权限等")
     @GetMapping("/current")
     public BaseResponse<UserEO> getCurrentUser(HttpServletRequest hsr){
         UserEO cuser = (UserEO) hsr.getSession().getAttribute(USER_LOGIN_STATE);
@@ -114,6 +121,7 @@ public class UserEOController {
      * @param userName  可为空
      * @return
      */
+    @Operation(summary = "用户管理-查询用户", description = "获取用户信息列表；仅限管理员可查，查询条件：用户名")
     @GetMapping("/search")
     public BaseResponse<List<UserEO>> userSearch(String userName,HttpServletRequest hsr){
         // 仅管理员可查询
@@ -136,6 +144,7 @@ public class UserEOController {
      * @param id   逻辑删除
      * @return
      */
+    @Operation(summary = "根据id删除用户", description = "根据id删除用户；仅限管理员可查，逻辑删除")
     @GetMapping("/delete")
     public BaseResponse<Boolean> deleteUser(long id, HttpServletRequest hsr){
         // 仅管理员可查询

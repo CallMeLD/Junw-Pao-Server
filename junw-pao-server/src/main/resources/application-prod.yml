@@ -10,3 +10,12 @@ spring:
 
 server:
   address: 0.0.0.0
+
+# swagger-ui TODO 上线注意修改swagger配置，避免暴露接口
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    path : /swagger-ui.html
+    enabled: false
+  packages-to-scan: my.junw.pao.controller

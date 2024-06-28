@@ -1,6 +1,8 @@
 package my.junw.pao.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import my.junw.pao.exception.BusinessException;
@@ -12,10 +14,16 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import my.junw.pao.util.UserToUser;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.DigestUtils;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static my.junw.pao.contant.UserConstant.SALT;
 import static my.junw.pao.contant.UserConstant.USER_LOGIN_STATE;
@@ -128,4 +136,67 @@ public class UserEOServiceImpl extends ServiceImpl<UserEODao, UserEO> implements
         request.getSession().removeAttribute(USER_LOGIN_STATE);
         return 1;
     }
+
+    /**
+     * 根据标签查找用户
+     * @param tagNameList  用户需要拥有的标签
+     * @return
+     */
+    @Override
+    public List<UserEO> searchUsersByTags(List<String> tagNameList) {
+        if (CollectionUtils.isEmpty(tagNameList)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        /**
+         * 两种实现方式
+         * 1. 可以直接从数据库中 like查询
+         * 2. 查找所有用户，内存解json匹配条件（如下）
+         */
+        //1. 查找所有用户
+        List<UserEO> dbUserList = baseMapper.selectList(null);
+        Gson gson = new Gson();
+        return dbUserList.stream().filter(user ->{
+            String tagsStr = user.getTags();
+            Set<String> tempTagNameSet = gson.fromJson(tagsStr, new TypeToken<Set<String>>() {
+            }.getType());
+            tempTagNameSet = Optional.ofNullable(tempTagNameSet).orElse(new HashSet<>());
+            for (String tagName : tagNameList) {
+                if (!tempTagNameSet.contains(tagName)) {
+                    return false;
+                }
+            }
+            return true;
+        }).map(user -> UserToUser.INSTANCE.toSafeUser(user)).collect(Collectors.toList());
+    }
+
+    /**
+     * 根据标签搜索用户（SQL 查询版）
+     *
+     * @param tagNameList 用户要拥有的标签
+     * @return
+     *
+     * @Deprecated 废弃的
+     *      since  废弃版本
+     *      forRemoval  后续是否移除
+     */
+    @Deprecated(since = "1.2", forRemoval = true)
+    private List<UserEO> searchUsersByTagsBySQL(List<String> tagNameList) {
+        if (CollectionUtils.isEmpty(tagNameList)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        QueryWrapper<UserEO> queryWrapper = new QueryWrapper<>();
+        // 拼接 and 查询
+        // like '%Java%' and like '%Python%'
+        for (String tagName : tagNameList) {
+            queryWrapper = queryWrapper.like("tags", tagName);
+        }
+        List<UserEO> userList = baseMapper.selectList(queryWrapper);
+        return userList.stream().map(userEO -> UserToUser.INSTANCE.toSafeUser(userEO)).collect(Collectors.toList());
+    }
+
+
+
+
+
+
 }

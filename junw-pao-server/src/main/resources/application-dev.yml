@@ -1,0 +1,8 @@
+# swagger-ui
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    path : /swagger-ui.html
+    enabled: true
+  packages-to-scan: my.junw.pao.controller

@@ -4,6 +4,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import my.junw.pao.entity.UserEO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  * 用户 服务类
@@ -41,5 +43,12 @@ public interface IUserEOService extends IService<UserEO> {
      */
     int userLogout(HttpServletRequest request);
 
+    /**
+     * 根据标签搜索用户
+     *
+     * @param tagNameList
+     * @return
+     */
+    List<UserEO> searchUsersByTags(List<String> tagNameList);
 
 }
