@@ -33,6 +33,7 @@ import static my.junw.pao.contant.UserConstant.USER_LOGIN_STATE;
  * @since 2024-06-21
  */
 @RestController   // 返回值默认为 json 类型
+@CrossOrigin(allowCredentials = "true",origins = {"http://localhost:5173"}) // 后端处理跨域，允许指定端口访问; 高版本Spring 需要设置allowCredentials 为 true
 @RequestMapping("/user")
 @Tag(name = "|UserEO| 用户-前端控制器 ")
 public class UserEOController {
