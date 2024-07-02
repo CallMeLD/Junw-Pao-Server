@@ -13,7 +13,7 @@ public interface UserConstant {
     /**
      * 用户登录态
      */
-    String USER_LOGIN_STATE = "junw-userCenter-login";
+    String USER_LOGIN_STATE = "junw-pao-login";
 
     // 权限
     // 管理员

@@ -1,6 +1,6 @@
 spring:
   application:
-    name:junw-user-center-server
+    name:junw-pao-server
   # 指定运行环境
   profiles:
     active: dev
@@ -12,7 +12,26 @@ spring:
   # 登录过期时间 s
   session:
     timeout: 86400
+  # redis 配置
+  data:
+    redis:
+      port: 6379
+      host: localhost
+      password: passed
+      database: 0
 
+      # Lettuce 客户端的配置
+      lettuce:
+        # 连接池配置
+        pool:
+          # 最小空闲连接
+          min-idle: 0
+          # 最大空闲连接
+          max-idle: 8
+          # 最大活跃连接
+          max-active: 8
+          # 从连接池获取连接 最大超时时间，小于等于0则表示不会超时
+          max-wait: -1ms
 server:
   port: 8080
   servlet:
